@@ -1,0 +1,12 @@
+# Minimal Features for Ultra-Efficient Model
+# Total: 7 features
+# Test Accuracy: 84.01%
+# Feature Reduction: 77.4%
+
+OverTime
+MonthlyIncome
+Age
+TotalWorkingYears
+DistanceFromHome
+StockOptionLevel
+EnvironmentSatisfaction
