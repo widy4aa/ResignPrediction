@@ -1,4 +1,4 @@
-# 🚀 Employee Attrition Prediction System
+# 🚀 ResignPrediction - Employee Attrition Prediction System
 
 Sistem prediksi attrition karyawan menggunakan **Machine Learning** (Random Forest) dengan **7 features optimal** yang menghasilkan accuracy **84.01%** - lebih tinggi dari model full (82.99%).
 
@@ -43,7 +43,7 @@ Sistem prediksi attrition karyawan menggunakan **Machine Learning** (Random Fore
 ## 📁 Folder Structure
 
 ```
-data-mining/
+ResignPrediction/
 │
 ├── backend/                        🔧 API Server (Flask MVC)
 │   ├── app_mvc.py                 # Entry point
@@ -53,7 +53,6 @@ data-mining/
 │   ├── views.py                   # View layer (response formatting)
 │   ├── routes.py                  # Route definitions
 │   ├── requirements.txt           # Python dependencies
-│   ├── .env.example               # Environment template
 │   └── README.md                  # Backend documentation
 │
 ├── frontend/                       🎨 Web Application (Vue 3)
@@ -80,6 +79,8 @@ data-mining/
 │   ├── feature_importance_minimal.csv  # Feature ranking
 │   ├── minimal_features.txt       # Features list
 │   ├── WA_Fn-UseC_-HR-Employee-Attrition.csv  # Dataset
+│   ├── attrition_pipeline_minimal.pkl  # Trained model
+│   ├── hasil.json                 # Training results
 │   ├── img/                       # 19 visualization graphs
 │   │   ├── full/                 # Full model graphs
 │   │   ├── reduced/              # Reduced model graphs
@@ -96,8 +97,15 @@ data-mining/
 - Python 3.8+
 - Node.js 16+
 - pip & npm
+- Git
 
-### 2️⃣ Backend Setup
+### 2️⃣ Clone Repository
+```bash
+git clone https://github.com/widy4aa/ResignPrediction.git
+cd ResignPrediction
+```
+
+### 3️⃣ Backend Setup
 ```bash
 cd backend
 
@@ -109,7 +117,7 @@ python app_mvc.py
 ```
 ✅ Server running di `http://localhost:5000`
 
-### 3️⃣ Frontend Setup
+### 4️⃣ Frontend Setup
 ```bash
 cd frontend
 
@@ -121,7 +129,7 @@ npm run dev
 ```
 ✅ App running di `http://localhost:5173`
 
-### 4️⃣ Access Application
+### 5️⃣ Access Application
 - **Home:** `http://localhost:5173/`
 - **Predict:** `http://localhost:5173/predict`
 - **Insight:** `http://localhost:5173/insight`
@@ -145,6 +153,7 @@ Dokumentasi lengkap untuk:
 - `GET /features` - Required features
 - `POST /predict` - Single prediction
 - `GET /api/results` - Model training results
+- `GET /api/visualizations/list` - List visualizations
 - `GET /api/visualizations/<category>/<file>` - Serve images
 
 ---
@@ -181,12 +190,12 @@ Dokumentasi lengkap untuk:
 **Key Insights:**
 - Ultra-minimal: 7 features (77% reduction)
 - Better accuracy: 84.01% vs 82.99% (full model)
-- Faster prediction: ~20s vs 2 minutes
+- Faster prediction: ~20ms/sample
 - Well-balanced: No overfitting detected
 
 ---
 
-## 🎯 7 Required Features
+## 🎯 7 Required Features for Prediction
 
 | # | Feature | Category | Importance | Type |
 |---|---------|----------|------------|------|
@@ -206,7 +215,7 @@ Dokumentasi lengkap untuk:
 ```
 User Browser
     ↓
-Frontend (Vue 3)
+Frontend (Vue 3 + Vite)
     ↓ HTTP/REST
 Backend API (Flask MVC)
     ├─ Controllers (Business Logic)
@@ -218,108 +227,109 @@ ML Model (Random Forest)
 
 ### MVC Flow
 ```
-Request
-  ↓
+HTTP Request
+    ↓
 routes.py
-  ↓
+    ↓
 controllers.py
-  ↓
+    ↓
 models.py
-  ↓
-Response
+    ↓
+HTTP Response (JSON)
 ```
 
 ---
 
 ## 📊 Visualizations (19 Graphs)
 
-### Full Model (3)
-- Preprocessing flow
-- Confusion matrix
-- Feature importance
+Available in the Insight page with full explanations:
 
-### Reduced Model (3)
-- Preprocessing flow
+### Full Model (3 graphs)
+- Preprocessing pipeline flow
 - Confusion matrix
-- Feature importance
+- Feature importance ranking
 
-### Minimal Model (3)
-- Preprocessing flow
+### Reduced Model (3 graphs)
+- Preprocessing pipeline flow
 - Confusion matrix
-- Feature importance
+- Feature importance ranking
 
-### Comparison (5)
+### Minimal Model (3 graphs)
+- Preprocessing pipeline flow
+- Confusion matrix
+- Feature importance ranking
+
+### Comparison (5+ graphs)
 - Accuracy comparison
 - Feature efficiency
-- Metrics overview
-- Training time
-- Summary dashboard
-
-**Total: 14 visualization graphs** (dapat diakses di Insight page)
+- Performance metrics
+- Training efficiency
+- Model comparison dashboard
 
 ---
 
 ## 🔄 Features Overview
 
-### Landing Page
-- ✅ Dynamic statistics dari API
-- ✅ Model accuracy (84.01%)
-- ✅ Dataset info (1,470 samples)
+### Landing Page ✨
+- ✅ Dynamic statistics from API
+- ✅ Model accuracy display (84.01%)
+- ✅ Dataset information (1,470 samples)
+- ✅ Feature highlights (7 key features)
 - ✅ Call-to-action buttons
-- ✅ Responsive design
+- ✅ Responsive mobile design
 
-### Predict Page
-**Manual Mode:**
+### Predict Page 🔮
+**Manual Prediction Mode:**
 - ✅ Form dengan 7 input fields
-- ✅ Real-time validation
-- ✅ Instant prediction
+- ✅ Real-time input validation
+- ✅ Instant prediction response
 - ✅ Confidence score display
+- ✅ Result interpretation
 
-**CSV Mode:**
-- ✅ File upload
+**CSV Batch Mode:**
+- ✅ File upload dengan drag & drop
 - ✅ CSV parsing & validation
-- ✅ Batch prediction
-- ✅ Download results
-- ✅ Preview data
+- ✅ Batch prediction (100+ rows)
+- ✅ Download results as CSV
+- ✅ Data preview before prediction
 
-### Insight Page
+### Insight Page 📈
 - ✅ Dataset preview (1,470 rows × 35 columns)
-- ✅ Pagination dengan controls
-- ✅ Model analysis (3 versions)
-- ✅ Feature comparison
-- ✅ 14 visualization graphs
-- ✅ Graph explanations
-- ✅ Model comparison
-- ✅ Insights & recommendations
+- ✅ Advanced pagination
+- ✅ Model analysis dashboard
+- ✅ Feature comparison tools
+- ✅ 19 visualization graphs with explanations
+- ✅ Model performance comparison
+- ✅ Key insights & recommendations
 
 ---
 
-## 📡 API Endpoints
+## 📡 API Endpoints Complete List
 
 ### Health & Features
-```bash
-GET /health                    # Server status
-GET /features                  # Required features list
+```
+GET /health
+GET /features
 ```
 
 ### Predictions
-```bash
-POST /predict                  # Single prediction
 ```
-**Input:** 7 features (JSON)
-**Output:** Prediction + confidence
+POST /predict
+```
+**Request Body:** 7 features (JSON)
+**Response:** Prediction + confidence score
 
 ### Model Results
-```bash
-GET /api/results               # All models results
-GET /api/results/summary       # Models summary
-GET /api/results/model/<type>  # Specific model
+```
+GET /api/results
+GET /api/results/summary
+GET /api/results/model/<type>
 ```
 
 ### Visualizations
-```bash
-GET /api/visualizations/list                # List all graphs
-GET /api/visualizations/<category>/<file>   # Serve image
+```
+GET /api/visualizations/list
+GET /api/visualizations/<category>/<filename>
 ```
 
 ---
@@ -329,6 +339,11 @@ GET /api/visualizations/<category>/<file>   # Serve image
 ### Backend Health Check
 ```bash
 curl http://localhost:5000/health
+```
+
+### Get Required Features
+```bash
+curl http://localhost:5000/features
 ```
 
 ### Prediction Test
@@ -346,94 +361,107 @@ curl -X POST http://localhost:5000/predict \
   }'
 ```
 
-### Frontend Tests
-- ✅ Landing page loads correctly
-- ✅ Predict form validation works
-- ✅ CSV upload & parsing works
-- ✅ Batch prediction succeeds
+### Frontend Manual Tests
+- ✅ Landing page loads with dynamic data
+- ✅ Predict form validation works correctly
+- ✅ CSV upload & parsing functionality
+- ✅ Batch prediction processing
 - ✅ Insight page displays all data
-- ✅ Pagination works properly
-- ✅ Graph modal popups work
+- ✅ Pagination controls work properly
+- ✅ Graph modal popups display correctly
 - ✅ Responsive on mobile/tablet/desktop
 
 ---
 
-## 🚀 Deployment
+## 🚀 Deployment Guide
 
 ### Production Build
 ```bash
 # Frontend
 cd frontend
 npm run build
-# Output: dist/ folder
+# Output: dist/ folder (ready for serving)
 
 # Backend
 cd backend
-python app_mvc.py  # Production mode
+python app_mvc.py
+# Set DEBUG=False in config.py for production
 ```
 
 ### Environment Variables
-Create `.env` files:
 
-**Backend (.env):**
+**Backend (.env in backend/ folder):**
 ```
-DEBUG=False
+FLASK_APP=app_mvc.py
 FLASK_ENV=production
+DEBUG=False
 PORT=5000
+MODEL_PATH=../model/attrition_pipeline_minimal.pkl
 ```
 
-**Frontend (.env):**
+**Frontend (.env in frontend/ folder):**
 ```
-VITE_API_URL=http://your-backend-url
+VITE_API_URL=http://your-backend-url:5000
 ```
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Issue: Backend won't start
+### Backend Issues
+
+**Issue: Backend won't start**
 ```bash
 # Check Python version
 python --version  # Should be 3.8+
 
-# Check dependencies
+# Verify dependencies
 pip list | grep Flask
 
-# Try reinstall
+# Reinstall requirements
 pip install -r requirements.txt --force-reinstall
 ```
 
-### Issue: Frontend won't load
+**Issue: Model file not found**
 ```bash
-# Check Node version
-node --version  # Should be 16+
+# Check model path in config.py
+# Verify: model/attrition_pipeline_minimal.pkl exists
+# Verify: model/hasil.json exists
+```
 
+**Issue: CORS errors**
+```bash
+# Already enabled in app_mvc.py
+# Check CORS_ORIGINS in config.py
+```
+
+### Frontend Issues
+
+**Issue: npm dependencies error**
+```bash
 # Clear npm cache
 npm cache clean --force
 
 # Reinstall dependencies
-rm -rf node_modules
+rm -rf node_modules package-lock.json
 npm install
 ```
 
-### Issue: API connection error
+**Issue: API connection error**
 ```bash
-# Check backend is running
+# Verify backend is running
 curl http://localhost:5000/health
 
-# Check frontend proxy config
-# Edit: vite.config.js
-
-# Check CORS settings
-# Backend: Check app_mvc.py for CORS setup
+# Check CORS headers
+# Check frontend proxy in vite.config.js
 ```
 
-### Issue: CSV prediction fails
+**Issue: CSV prediction fails**
 ```
-- Verify CSV has 7 columns
-- Check column names match (case-sensitive)
-- Ensure data types are correct
-- Sample: backend/example.csv
+✓ Verify CSV has 7 columns
+✓ Check column names match exactly (case-sensitive)
+✓ Ensure data types are correct
+✓ Use sample_prediction.csv as template
 ```
 
 ---
@@ -443,73 +471,87 @@ curl http://localhost:5000/health
 | Metric | Value |
 |--------|-------|
 | **Model Accuracy** | 84.01% |
-| **Precision** | 86% |
-| **Recall** | 96% |
+| **Model Precision** | 86% |
+| **Model Recall** | 96% |
 | **F1-Score** | 91% |
-| **Training Time** | ~2-3 sec |
-| **Prediction Time** | ~20ms/sample |
-| **Batch Prediction (100 rows)** | ~2-3 sec |
+| **Training Time** | ~2-3 seconds |
+| **Single Prediction** | ~20ms |
+| **Batch Prediction (100 rows)** | ~2-3 seconds |
+| **Dataset Size** | 1,470 employees |
 
 ---
 
-## 📝 Notes
+## 📋 Checklist Features
 
-### What's Included
-✅ Production-ready code  
-✅ Comprehensive documentation  
-✅ Clean MVC architecture  
-✅ Responsive UI  
-✅ Error handling  
-✅ API validation  
-✅ 19 visualization graphs  
-✅ Dataset explorer  
-✅ CSV batch processing  
+### What's Included ✅
+- ✅ Production-ready code (MVC architecture)
+- ✅ Comprehensive documentation (3 README files)
+- ✅ Clean, modular codebase
+- ✅ Responsive UI design
+- ✅ Comprehensive error handling
+- ✅ API input validation
+- ✅ 19 visualization graphs
+- ✅ Dataset explorer with pagination
+- ✅ CSV batch processing
+- ✅ Health check monitoring
 
-### Best Practices Applied
-✅ Separation of concerns (MVC)  
-✅ RESTful API design  
-✅ Reactive state management (Vue)  
-✅ CORS enabled for development  
-✅ Input validation & sanitization  
-✅ Error handling & logging  
-✅ Modular components  
-✅ Responsive design  
+### Best Practices Applied ✅
+- ✅ Separation of concerns (MVC pattern)
+- ✅ RESTful API design
+- ✅ Reactive state management (Vue 3 Composition API)
+- ✅ CORS enabled for development
+- ✅ Input validation & sanitization
+- ✅ Error handling & logging
+- ✅ Modular, reusable components
+- ✅ Mobile-responsive design
+- ✅ Performance optimized
+- ✅ Security best practices
 
 ---
 
-## 🔗 Quick Links
+## 🔗 Useful Links
 
-- **GitHub:** (Not available)
-- **API Documentation:** See `backend/README.md`
-- **Frontend Documentation:** See `frontend/README.md`
-- **Model Documentation:** See `model/README.md`
+- **GitHub Repository:** https://github.com/widy4aa/ResignPrediction
 - **Dataset Source:** IBM HR Analytics (Kaggle)
+- **Backend Docs:** See `backend/README.md`
+- **Frontend Docs:** See `frontend/README.md`
+- **Model Docs:** See `model/README.md`
 
 ---
 
 ## 👤 Author
 
-Developed: November 2025
+**Created:** November 2025  
+**Version:** 1.0.0  
+**Status:** ✅ Production Ready
 
 ---
 
 ## 📄 License
 
-This project is provided as-is for educational purposes.
+This project is provided for educational and learning purposes.
 
 ---
 
-## 🤝 Support
+## 💬 Support & Questions
 
-For issues or questions:
-1. Check respective README files (backend/frontend/model)
-2. Review troubleshooting section above
-3. Check console logs for error details
+For issues, questions, or feedback:
+
+1. **Check Documentation:**
+   - `backend/README.md` - API & backend setup
+   - `frontend/README.md` - UI & frontend setup
+   - `model/README.md` - ML model details
+
+2. **Review Troubleshooting Section** above
+
+3. **Check Console Logs:**
+   - Backend: Terminal output
+   - Frontend: Browser Developer Tools (F12)
+
+4. **GitHub Issues:** Create an issue on the GitHub repository
 
 ---
 
-**Last Updated:** November 28, 2025  
-**Version:** 1.0.0  
-**Status:** Production Ready ✅
-#   R e s i g n P r e d i c t i o n  
- 
+**Last Updated:** November 29, 2025  
+**Repository:** https://github.com/widy4aa/ResignPrediction  
+**Status:** Active & Maintained ✅
