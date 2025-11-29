@@ -28,8 +28,23 @@
       <p class="text-muted-foreground">Memuat data...</p>
     </div>
 
+    <!-- Error State -->
+    <div v-else-if="error" class="container py-16 text-center">
+      <div class="text-destructive text-6xl mb-4">⚠️</div>
+      <h2 class="text-2xl font-bold mb-2">Error Loading Data</h2>
+      <p class="text-muted-foreground mb-4">{{ error }}</p>
+      <Button @click="loadData">Try Again</Button>
+    </div>
+
+    <!-- No Data State -->
+    <div v-else-if="!resultsData" class="container py-16 text-center">
+      <div class="text-muted-foreground text-6xl mb-4">📊</div>
+      <h2 class="text-2xl font-bold mb-2">No Data Available</h2>
+      <p class="text-muted-foreground">Please check if the backend is running.</p>
+    </div>
+
     <!-- Main Content -->
-    <div v-else class="container py-8 max-w-6xl space-y-12">
+    <div v-else-if="resultsData" class="container py-8 max-w-6xl space-y-12">
       <!-- Title -->
       <div class="text-center">
         <h1 class="text-4xl font-bold tracking-tight mb-2">Model Documentation</h1>
@@ -38,30 +53,30 @@
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
           </svg>
-          Training Date: {{ resultsData.training_date }}
+          Training Date: {{ resultsData?.dataset_info?.training_date || 'N/A' }}
         </div>
       </div>
 
       <!-- 1. INFORMASI DATASET -->
-      <section id="dataset">
+      <section id="dataset" v-if="resultsData?.dataset_info">
         <Card class="p-6">
           <h2 class="text-2xl font-bold mb-6">📊 Informasi Dataset</h2>
           
           <div class="grid gap-4 md:grid-cols-4 mb-6">
             <div class="p-4 rounded-lg border text-center">
-              <div class="text-3xl font-bold mb-1">{{ resultsData.dataset_info.total_samples.toLocaleString() }}</div>
+              <div class="text-3xl font-bold mb-1">{{ resultsData.dataset_info.total_samples?.toLocaleString() || 0 }}</div>
               <div class="text-sm text-muted-foreground">Total Samples</div>
             </div>
             <div class="p-4 rounded-lg border text-center">
-              <div class="text-3xl font-bold mb-1">{{ resultsData.dataset_info.total_features_original }}</div>
+              <div class="text-3xl font-bold mb-1">{{ resultsData.dataset_info.features_original || 0 }}</div>
               <div class="text-sm text-muted-foreground">Fitur Awal</div>
             </div>
             <div class="p-4 rounded-lg border text-center">
-              <div class="text-3xl font-bold mb-1">{{ resultsData.dataset_info.total_features_after_cleanup }}</div>
+              <div class="text-3xl font-bold mb-1">{{ resultsData.dataset_info.features_after_cleanup || 0 }}</div>
               <div class="text-sm text-muted-foreground">Setelah Cleanup</div>
             </div>
             <div class="p-4 rounded-lg border text-center">
-              <div class="text-3xl font-bold mb-1 text-destructive">{{ resultsData.dataset_info.attrition_rate.toFixed(2) }}%</div>
+              <div class="text-3xl font-bold mb-1 text-destructive">{{ resultsData.dataset_info.attrition_rate || '0%' }}</div>
               <div class="text-sm text-muted-foreground">Attrition Rate</div>
             </div>
           </div>
@@ -72,22 +87,22 @@
               <div class="p-4 rounded-lg border">
                 <div class="flex justify-between items-center mb-2">
                   <span class="text-sm">Tetap (No Attrition)</span>
-                  <Badge>{{ resultsData.dataset_info.attrition_no }}</Badge>
+                  <Badge>{{ resultsData.dataset_info.total_samples - resultsData.dataset_info.attrition_count }}</Badge>
                 </div>
                 <div class="w-full bg-muted rounded-full h-3">
-                  <div class="bg-green-500 h-3 rounded-full" :style="{ width: ((resultsData.dataset_info.attrition_no / resultsData.dataset_info.total_samples) * 100) + '%' }"></div>
+                  <div class="bg-green-500 h-3 rounded-full" :style="{ width: (((resultsData.dataset_info.total_samples - resultsData.dataset_info.attrition_count) / resultsData.dataset_info.total_samples) * 100) + '%' }"></div>
                 </div>
-                <div class="text-xs text-muted-foreground mt-1">{{ ((resultsData.dataset_info.attrition_no / resultsData.dataset_info.total_samples) * 100).toFixed(1) }}%</div>
+                <div class="text-xs text-muted-foreground mt-1">{{ (((resultsData.dataset_info.total_samples - resultsData.dataset_info.attrition_count) / resultsData.dataset_info.total_samples) * 100).toFixed(1) }}%</div>
               </div>
               <div class="p-4 rounded-lg border">
                 <div class="flex justify-between items-center mb-2">
                   <span class="text-sm">Resign (Yes Attrition)</span>
-                  <Badge variant="destructive">{{ resultsData.dataset_info.attrition_yes }}</Badge>
+                  <Badge variant="destructive">{{ resultsData.dataset_info.attrition_count }}</Badge>
                 </div>
                 <div class="w-full bg-muted rounded-full h-3">
-                  <div class="bg-destructive h-3 rounded-full" :style="{ width: resultsData.dataset_info.attrition_rate + '%' }"></div>
+                  <div class="bg-destructive h-3 rounded-full" :style="{ width: resultsData.dataset_info.attrition_rate }"></div>
                 </div>
-                <div class="text-xs text-muted-foreground mt-1">{{ resultsData.dataset_info.attrition_rate.toFixed(1) }}%</div>
+                <div class="text-xs text-muted-foreground mt-1">{{ resultsData.dataset_info.attrition_rate }}</div>
               </div>
             </div>
             
@@ -203,7 +218,7 @@
       </section>
 
       <!-- 2. MODEL V1 FULL -->
-      <section id="model-full">
+      <section id="model-full" v-if="resultsData?.models?.full">
         <Card class="p-6 bg-gradient-to-br from-blue-50/50 to-indigo-50/50">
           <div class="flex items-center gap-3 mb-6">
             <Badge variant="outline" class="text-base px-3 py-1">MODEL V1</Badge>
@@ -257,11 +272,11 @@
               </div>
               <div class="p-4 rounded-lg border">
                 <div class="text-sm text-muted-foreground mb-1">Total Features</div>
-                <div class="font-bold text-lg">{{ resultsData.models.full.num_features }}</div>
+                <div class="font-bold text-lg">{{ resultsData.models.full?.features || 0 }}</div>
               </div>
               <div class="p-4 rounded-lg border">
                 <div class="text-sm text-muted-foreground mb-1">Training Time</div>
-                <div class="font-bold text-lg">{{ resultsData.models.full.training_time.toFixed(4) }}s</div>
+                <div class="font-bold text-lg">{{ resultsData.models.full?.training_time_seconds?.toFixed(4) || 0 }}s</div>
               </div>
             </div>
 
@@ -275,7 +290,7 @@
                   <div class="font-semibold text-blue-900">✓ Fitur Digunakan (31)</div>
                 </div>
                 <div class="text-sm space-y-2 max-h-64 overflow-y-auto">
-                  <div v-for="feature in resultsData.models.full.features" :key="feature" class="flex items-start gap-2 text-blue-800">
+                  <div v-for="feature in (resultsData.models.full?.feature_list || [])" :key="feature" class="flex items-start gap-2 text-blue-800">
                     <span class="text-blue-500 mt-0.5">•</span>
                     <span>{{ feature }}</span>
                   </div>
@@ -350,19 +365,19 @@
             <div class="grid gap-4 md:grid-cols-4">
               <div class="p-4 rounded-lg border text-center">
                 <div class="text-sm text-muted-foreground mb-1">Train Accuracy</div>
-                <div class="font-bold text-2xl">{{ resultsData.models.full.train_accuracy.toFixed(2) }}%</div>
+                <div class="font-bold text-2xl">{{ resultsData.models.full?.train_accuracy?.toFixed(2) || 0 }}%</div>
               </div>
               <div class="p-4 rounded-lg border text-center">
                 <div class="text-sm text-muted-foreground mb-1">Test Accuracy</div>
-                <div class="font-bold text-2xl text-primary">{{ resultsData.models.full.test_accuracy.toFixed(2) }}%</div>
+                <div class="font-bold text-2xl text-primary">{{ resultsData.models.full?.test_accuracy?.toFixed(2) || 0 }}%</div>
               </div>
               <div class="p-4 rounded-lg border text-center">
-                <div class="text-sm text-muted-foreground mb-1">Precision (No)</div>
-                <div class="font-bold text-2xl">{{ (resultsData.models.full.classification_report.class_0_no_attrition.precision * 100).toFixed(1) }}%</div>
+                <div class="text-sm text-muted-foreground mb-1">Precision</div>
+                <div class="font-bold text-2xl">{{ ((resultsData.models.full?.precision || 0) * 100).toFixed(1) }}%</div>
               </div>
               <div class="p-4 rounded-lg border text-center">
-                <div class="text-sm text-muted-foreground mb-1">Recall (No)</div>
-                <div class="font-bold text-2xl">{{ (resultsData.models.full.classification_report.class_0_no_attrition.recall * 100).toFixed(1) }}%</div>
+                <div class="text-sm text-muted-foreground mb-1">Recall</div>
+                <div class="font-bold text-2xl">{{ ((resultsData.models.full?.recall || 0) * 100).toFixed(1) }}%</div>
               </div>
             </div>
           </div>
@@ -370,7 +385,7 @@
       </section>
 
       <!-- 3. MODEL V2 REDUCED -->
-      <section id="model-reduced">
+      <section id="model-reduced" v-if="resultsData?.models?.reduced">
         <Card class="p-6 bg-gradient-to-br from-purple-50/50 to-pink-50/50">
           <div class="flex items-center gap-3 mb-6">
             <Badge variant="secondary" class="text-base px-3 py-1">MODEL V2</Badge>
@@ -424,11 +439,11 @@
               </div>
               <div class="p-4 rounded-lg border">
                 <div class="text-sm text-muted-foreground mb-1">Total Features</div>
-                <div class="font-bold text-lg">{{ resultsData.models.reduced.num_features }}</div>
+                <div class="font-bold text-lg">{{ resultsData.models.reduced?.features || 0 }}</div>
               </div>
               <div class="p-4 rounded-lg border">
                 <div class="text-sm text-muted-foreground mb-1">Training Time</div>
-                <div class="font-bold text-lg">{{ resultsData.models.reduced.training_time.toFixed(4) }}s</div>
+                <div class="font-bold text-lg">{{ resultsData.models.reduced?.training_time_seconds?.toFixed(4) || 0 }}s</div>
               </div>
             </div>
 
@@ -442,7 +457,7 @@
                   <div class="font-semibold text-purple-900">✓ Fitur Dipertahankan (11)</div>
                 </div>
                 <div class="text-sm space-y-2">
-                  <div v-for="feature in resultsData.models.reduced.features" :key="feature" class="flex items-start gap-2 text-purple-800">
+                  <div v-for="feature in (resultsData.models.reduced?.feature_list || [])" :key="feature" class="flex items-start gap-2 text-purple-800">
                     <span class="text-purple-500 mt-0.5">•</span>
                     <span>{{ feature }}</span>
                   </div>
@@ -566,19 +581,19 @@
             <div class="grid gap-4 md:grid-cols-4">
               <div class="p-4 rounded-lg border text-center">
                 <div class="text-sm text-muted-foreground mb-1">Train Accuracy</div>
-                <div class="font-bold text-2xl">{{ resultsData.models.reduced.train_accuracy.toFixed(2) }}%</div>
+                <div class="font-bold text-2xl">{{ resultsData.models.reduced?.train_accuracy?.toFixed(2) || 0 }}%</div>
               </div>
               <div class="p-4 rounded-lg border text-center">
                 <div class="text-sm text-muted-foreground mb-1">Test Accuracy</div>
-                <div class="font-bold text-2xl text-primary">{{ resultsData.models.reduced.test_accuracy.toFixed(2) }}%</div>
+                <div class="font-bold text-2xl text-primary">{{ resultsData.models.reduced?.test_accuracy?.toFixed(2) || 0 }}%</div>
               </div>
               <div class="p-4 rounded-lg border text-center">
-                <div class="text-sm text-muted-foreground mb-1">Precision (No)</div>
-                <div class="font-bold text-2xl">{{ (resultsData.models.reduced.classification_report.class_0_no_attrition.precision * 100).toFixed(1) }}%</div>
+                <div class="text-sm text-muted-foreground mb-1">Precision</div>
+                <div class="font-bold text-2xl">{{ ((resultsData.models.reduced?.precision || 0) * 100).toFixed(1) }}%</div>
               </div>
               <div class="p-4 rounded-lg border text-center">
-                <div class="text-sm text-muted-foreground mb-1">Recall (No)</div>
-                <div class="font-bold text-2xl">{{ (resultsData.models.reduced.classification_report.class_0_no_attrition.recall * 100).toFixed(1) }}%</div>
+                <div class="text-sm text-muted-foreground mb-1">Recall</div>
+                <div class="font-bold text-2xl">{{ ((resultsData.models.reduced?.recall || 0) * 100).toFixed(1) }}%</div>
               </div>
             </div>
           </div>
@@ -586,7 +601,7 @@
       </section>
 
       <!-- 4. MODEL V3 MINIMAL (FINAL) -->
-      <section id="model-minimal">
+      <section id="model-minimal" v-if="resultsData?.models?.minimal">
         <Card class="p-6 bg-gradient-to-br from-green-50/50 to-emerald-50/50 border-2 border-green-500">
           <div class="flex items-center gap-3 mb-6">
             <Badge class="text-base px-3 py-1">MODEL V3 ⭐</Badge>
@@ -640,11 +655,11 @@
               </div>
               <div class="p-4 rounded-lg border">
                 <div class="text-sm text-muted-foreground mb-1">Total Features</div>
-                <div class="font-bold text-lg text-green-600">{{ resultsData.models.minimal.num_features }}</div>
+                <div class="font-bold text-lg text-green-600">{{ resultsData.models.minimal?.features || 0 }}</div>
               </div>
               <div class="p-4 rounded-lg border">
                 <div class="text-sm text-muted-foreground mb-1">Training Time</div>
-                <div class="font-bold text-lg">{{ resultsData.models.minimal.training_time.toFixed(4) }}s</div>
+                <div class="font-bold text-lg">{{ resultsData.models.minimal?.training_time_seconds?.toFixed(4) || 0 }}s</div>
               </div>
             </div>
             
@@ -792,19 +807,19 @@
             <div class="grid gap-4 md:grid-cols-4">
               <div class="p-4 rounded-lg border-2 border-green-500 text-center">
                 <div class="text-sm text-muted-foreground mb-1">Train Accuracy</div>
-                <div class="font-bold text-2xl text-green-600">{{ resultsData.models.minimal.train_accuracy.toFixed(2) }}%</div>
+                <div class="font-bold text-2xl text-green-600">{{ resultsData.models.minimal?.train_accuracy?.toFixed(2) || 0 }}%</div>
               </div>
               <div class="p-4 rounded-lg border-2 border-green-500 text-center">
                 <div class="text-sm text-muted-foreground mb-1">Test Accuracy ⭐</div>
-                <div class="font-bold text-3xl text-green-600">{{ resultsData.models.minimal.test_accuracy.toFixed(2) }}%</div>
+                <div class="font-bold text-3xl text-green-600">{{ resultsData.models.minimal?.test_accuracy?.toFixed(2) || 0 }}%</div>
               </div>
               <div class="p-4 rounded-lg border text-center">
-                <div class="text-sm text-muted-foreground mb-1">Precision (No)</div>
-                <div class="font-bold text-2xl">{{ (resultsData.models.minimal.classification_report.class_0_no_attrition.precision * 100).toFixed(1) }}%</div>
+                <div class="text-sm text-muted-foreground mb-1">Precision</div>
+                <div class="font-bold text-2xl">{{ ((resultsData.models.minimal?.precision || 0) * 100).toFixed(1) }}%</div>
               </div>
               <div class="p-4 rounded-lg border text-center">
-                <div class="text-sm text-muted-foreground mb-1">Recall (No)</div>
-                <div class="font-bold text-2xl">{{ (resultsData.models.minimal.classification_report.class_0_no_attrition.recall * 100).toFixed(1) }}%</div>
+                <div class="text-sm text-muted-foreground mb-1">Recall</div>
+                <div class="font-bold text-2xl">{{ ((resultsData.models.minimal?.recall || 0) * 100).toFixed(1) }}%</div>
               </div>
             </div>
           </div>
@@ -812,7 +827,7 @@
       </section>
 
       <!-- 5. COMPARISON -->
-      <section id="comparison">
+      <section id="comparison" v-if="resultsData?.models">
         <Card class="p-6 bg-gradient-to-br from-amber-50/50 to-orange-50/50">
           <h2 class="text-2xl font-bold mb-6">📊 Perbandingan Model</h2>
 
@@ -851,7 +866,7 @@
               </div>
               <div class="p-6 rounded-lg border-2 border-green-500 text-center">
                 <div class="text-sm text-muted-foreground mb-2">Minimal Model ⭐</div>
-                <div class="text-4xl font-bold mb-1 text-green-600">{{ resultsData.models.minimal.test_accuracy.toFixed(2) }}%</div>
+                <div class="text-4xl font-bold mb-1 text-green-600">{{ resultsData.models.minimal?.test_accuracy?.toFixed(2) || 0 }}%</div>
                 <div class="text-xs text-muted-foreground">7 fitur</div>
               </div>
             </div>
@@ -893,7 +908,7 @@
                 <div>
                   <div class="font-semibold mb-2">✅ Kelebihan Minimal Model:</div>
                   <ul class="space-y-1 text-muted-foreground">
-                    <li>• Akurasi tertinggi: {{ resultsData.models.minimal.test_accuracy.toFixed(2) }}%</li>
+                    <li>• Akurasi tertinggi: {{ resultsData.models.minimal?.test_accuracy?.toFixed(2) || 0 }}%</li>
                     <li>• Hanya 7 fitur (77.4% reduction)</li>
                     <li>• Input time ~20 detik vs 2-3 menit</li>
                     <li>• Lebih praktis untuk deployment</li>
@@ -903,10 +918,10 @@
                 <div>
                   <div class="font-semibold mb-2">📈 Perbandingan:</div>
                   <ul class="space-y-1 text-muted-foreground">
-                    <li>• Best: {{ resultsData.comparison.best_accuracy_model.toUpperCase() }}</li>
-                    <li>• Fastest: {{ resultsData.comparison.fastest_training_model.toUpperCase() }}</li>
-                    <li>• Most Efficient: {{ resultsData.comparison.most_efficient_model.toUpperCase() }}</li>
-                    <li>• Reduction: {{ resultsData.comparison.feature_reduction.full_to_minimal }}</li>
+                    <li>• Best Accuracy: {{ (resultsData.best_model || 'minimal').toUpperCase() }} ({{ resultsData.models.minimal?.test_accuracy?.toFixed(2) || 0 }}%)</li>
+                    <li>• Fastest Training: MINIMAL ({{ resultsData.models.minimal?.training_time_seconds?.toFixed(4) || 0 }}s)</li>
+                    <li>• Most Efficient: MINIMAL (7 fitur, 84.01%)</li>
+                    <li>• Reduction: 31 → 7 fitur (77.4%)</li>
                   </ul>
                 </div>
               </div>
@@ -916,7 +931,7 @@
       </section>
 
       <!-- 6. KESIMPULAN -->
-      <section id="conclusion">
+      <section id="conclusion" v-if="resultsData?.models?.minimal">
         <Card class="p-6 bg-gradient-to-br from-slate-50/50 to-gray-50/50">
           <h2 class="text-2xl font-bold mb-6">💡 Kesimpulan & Rekomendasi</h2>
 
@@ -933,15 +948,15 @@
                 <li class="flex gap-3">
                   <span class="text-blue-500 font-bold mt-0.5">•</span>
                   <span>
-                    <strong>Model Minimal (7 fitur)</strong> mencapai akurasi tertinggi <strong>{{ resultsData.models.minimal.test_accuracy.toFixed(2) }}%</strong>, 
+                    <strong>Model Minimal (7 fitur)</strong> mencapai akurasi tertinggi <strong>{{ resultsData.models.minimal?.test_accuracy?.toFixed(2) || 0 }}%</strong>, 
                     melampaui Full Model ({{ resultsData.models.full.test_accuracy.toFixed(2) }}%) dan Reduced Model ({{ resultsData.models.reduced.test_accuracy.toFixed(2) }}%).
                   </span>
                 </li>
                 <li class="flex gap-3">
                   <span class="text-blue-500 font-bold mt-0.5">•</span>
                   <span>
-                    Dataset IBM HR Analytics dengan <strong>{{ resultsData.dataset_info.total_samples.toLocaleString() }} karyawan</strong> menunjukkan 
-                    tingkat attrition <strong>{{ resultsData.dataset_info.attrition_rate.toFixed(2) }}%</strong>.
+                    Dataset IBM HR Analytics dengan <strong>{{ resultsData.dataset_info?.total_samples?.toLocaleString() || 0 }} karyawan</strong> menunjukkan 
+                    tingkat attrition <strong>{{ resultsData.dataset_info?.attrition_rate || '0%' }}</strong>.
                   </span>
                 </li>
                 <li class="flex gap-3">
@@ -960,7 +975,7 @@
                 <li class="flex gap-3">
                   <span class="text-blue-500 font-bold mt-0.5">•</span>
                   <span>
-                    Training time sangat cepat (<strong>{{ resultsData.models.minimal.training_time.toFixed(4) }}s</strong>), ideal untuk deployment real-time.
+                    Training time sangat cepat (<strong>{{ resultsData.models.minimal?.training_time_seconds?.toFixed(4) || 0 }}s</strong>), ideal untuk deployment real-time.
                   </span>
                 </li>
                 <li class="flex gap-3">
@@ -1067,6 +1082,7 @@ import Card from '../components/ui/Card.vue'
 import Badge from '../components/ui/Badge.vue'
 
 const loading = ref(true)
+const error = ref(null)
 const resultsData = ref(null)
 const visualizations = ref(null)
 const modalImage = ref(null)
@@ -1103,21 +1119,28 @@ const openVisualization = (category, filename) => {
 const loadData = async () => {
   try {
     loading.value = true
+    error.value = null
     
+    console.log('Fetching results...')
     // Fetch results from API
     const resultsResponse = await axios.get('http://localhost:5000/api/results')
+    console.log('Results response:', resultsResponse.data)
     resultsData.value = resultsResponse.data
     
+    console.log('Fetching visualizations...')
     // Fetch visualizations list
     const vizResponse = await axios.get('http://localhost:5000/api/visualizations/list')
+    console.log('Visualizations response:', vizResponse.data)
     visualizations.value = vizResponse.data.visualizations
     
     // Load dataset CSV
     await loadDataset()
     
+    console.log('Data loaded successfully:', resultsData.value)
     loading.value = false
-  } catch (error) {
-    console.error('Error loading data:', error)
+  } catch (err) {
+    console.error('Error loading data:', err)
+    error.value = err.message || 'Failed to load data'
     loading.value = false
   }
 }

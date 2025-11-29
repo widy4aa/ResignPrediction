@@ -74,26 +74,27 @@ class ResultsManager:
             return None
         
         return {
-            'training_date': self.results['training_date'],
+            'training_date': self.results['dataset_info'].get('training_date', 'N/A'),
             'dataset_info': self.results['dataset_info'],
             'models_summary': {
                 'full': {
-                    'features': self.results['models']['full']['num_features'],
+                    'features': self.results['models']['full']['features'],
                     'test_accuracy': self.results['models']['full']['test_accuracy'],
-                    'training_time': self.results['models']['full']['training_time']
+                    'training_time': self.results['models']['full']['training_time_seconds']
                 },
                 'reduced': {
-                    'features': self.results['models']['reduced']['num_features'],
+                    'features': self.results['models']['reduced']['features'],
                     'test_accuracy': self.results['models']['reduced']['test_accuracy'],
-                    'training_time': self.results['models']['reduced']['training_time']
+                    'training_time': self.results['models']['reduced']['training_time_seconds']
                 },
                 'minimal': {
-                    'features': self.results['models']['minimal']['num_features'],
+                    'features': self.results['models']['minimal']['features'],
                     'test_accuracy': self.results['models']['minimal']['test_accuracy'],
-                    'training_time': self.results['models']['minimal']['training_time']
+                    'training_time': self.results['models']['minimal']['training_time_seconds']
                 }
             },
-            'comparison': self.results['comparison']
+            'best_model': self.results.get('best_model', 'minimal'),
+            'best_accuracy': self.results.get('best_accuracy', 0.0)
         }
     
     def get_model_results(self, model_type):

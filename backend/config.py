@@ -16,9 +16,15 @@ class Config:
     # CORS settings
     CORS_ORIGINS = '*'
     
-    # Paths
+    # Paths - handle both local and Docker environments
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    
+    # Try local path first (development), then Docker path
     MODEL_DIR = os.path.join(BASE_DIR, '..', 'model')
+    if not os.path.exists(MODEL_DIR):
+        MODEL_DIR = '/model'
+    if not os.path.exists(MODEL_DIR):
+        MODEL_DIR = os.path.join(BASE_DIR, 'model')
     
     # Model files
     MODEL_PATH = os.path.join(MODEL_DIR, 'attrition_pipeline_minimal.pkl')

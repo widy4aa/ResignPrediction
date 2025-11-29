@@ -59,7 +59,7 @@ def initialize_managers():
     if dataset_info:
         print(f"\n📈 Dataset Info:")
         print(f"   Total Samples: {dataset_info['total_samples']}")
-        print(f"   Attrition Rate: {dataset_info['attrition_rate']:.2f}%")
+        print(f"   Attrition Rate: {dataset_info['attrition_rate']}")
     
     summary = results_manager.get_summary()
     if summary:
