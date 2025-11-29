@@ -109,6 +109,9 @@ cd ResignPrediction
 ```bash
 cd backend
 
+# Create .env file (or copy from .env.example)
+cp .env.example .env
+
 # Install dependencies
 pip install -r requirements.txt
 
@@ -120,6 +123,9 @@ python app_mvc.py
 ### 4️⃣ Frontend Setup
 ```bash
 cd frontend
+
+# Create .env file (or copy from .env.example)
+cp .env.example .env
 
 # Install dependencies
 npm install
@@ -375,6 +381,32 @@ curl -X POST http://localhost:5000/predict \
 
 ## 🚀 Deployment Guide
 
+### Railway Deployment (Recommended)
+
+**Backend:**
+1. Login ke [Railway](https://railway.app)
+2. New Project → Deploy from GitHub → Pilih `ResignPrediction`
+3. Settings → Root Directory → `backend`
+4. Variables → Set environment variables:
+   ```
+   FLASK_DEBUG=false
+   CORS_ORIGINS=*
+   MODEL_PATH=./public/attrition_pipeline_minimal.pkl
+   RESULTS_PATH=./public/hasil.json
+   IMG_BASE_PATH=./public/img
+   ```
+5. Deploy selesai! Dapatkan URL backend
+
+**Frontend:**
+1. Update `.env` dengan URL backend Railway:
+   ```
+   VITE_API_URL=https://your-backend.up.railway.app
+   ```
+2. Build: `npm run build`
+3. Deploy `dist/` folder ke hosting (Vercel/Netlify/Railway)
+
+📖 **Panduan lengkap:** `backend/DEPLOY_RAILWAY.md`
+
 ### Production Build
 ```bash
 # Frontend
@@ -385,23 +417,26 @@ npm run build
 # Backend
 cd backend
 python app_mvc.py
-# Set DEBUG=False in config.py for production
+# Set FLASK_DEBUG=false in .env for production
 ```
 
 ### Environment Variables
 
 **Backend (.env in backend/ folder):**
-```
-FLASK_APP=app_mvc.py
-FLASK_ENV=production
-DEBUG=False
-PORT=5000
-MODEL_PATH=../model/attrition_pipeline_minimal.pkl
+```env
+FLASK_DEBUG=false
+FLASK_HOST=0.0.0.0
+FLASK_PORT=5000
+CORS_ORIGINS=*
+MODEL_PATH=./public/attrition_pipeline_minimal.pkl
+RESULTS_PATH=./public/hasil.json
+IMG_BASE_PATH=./public/img
 ```
 
 **Frontend (.env in frontend/ folder):**
-```
-VITE_API_URL=http://your-backend-url:5000
+```env
+VITE_API_URL=http://localhost:5000
+# For production: https://your-backend-url.com
 ```
 
 ---
@@ -413,6 +448,143 @@ VITE_API_URL=http://your-backend-url:5000
 **Issue: Backend won't start**
 ```bash
 # Check Python version
+python --version  # Should be 3.8+
+
+# Reinstall dependencies
+pip install -r requirements.txt
+
+# Check if model files exist
+ls public/attrition_pipeline_minimal.pkl
+ls public/hasil.json
+```
+
+**Issue: Model not found**
+```bash
+# Verify paths in .env
+cat .env  # Check MODEL_PATH and RESULTS_PATH
+
+# Copy model files if missing
+cp ../model/attrition_pipeline_minimal.pkl public/
+cp ../model/hasil.json public/
+cp -r ../model/img public/
+```
+
+**Issue: CORS errors**
+```bash
+# Update CORS_ORIGINS in .env
+# For development: CORS_ORIGINS=*
+# For production: CORS_ORIGINS=https://your-frontend-url.com
+```
+
+### Frontend Issues
+
+**Issue: API calls fail**
+```bash
+# Check .env file exists
+cat .env
+
+# Verify VITE_API_URL
+# Should match backend URL (e.g., http://localhost:5000)
+
+# Restart dev server after changing .env
+npm run dev
+```
+
+**Issue: Build fails**
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules
+npm install
+
+# Clear cache and rebuild
+npm run build
+```
+
+**Issue: Images not loading in Insight page**
+- Ensure backend is running
+- Check browser console for CORS errors
+- Verify API_URL in `src/config/api.js`
+
+### Model Training Issues
+
+**Issue: Want to retrain model**
+```bash
+cd model
+python model.py  # Trains all 3 models
+python generate_graphs.py  # Generates visualizations
+```
+
+---
+
+## 📖 Additional Resources
+
+- **Backend API Docs:** `backend/README.md`
+- **Frontend Guide:** `frontend/README.md`
+- **Model Details:** `model/README.md`
+- **Deployment Guide:** `backend/DEPLOY_RAILWAY.md`
+- **Jupyter Notebook:** `model/attrition_models.ipynb`
+
+---
+
+## 👨‍💻 Tech Stack
+
+**Backend:**
+- Flask 3.0.0 (Python web framework)
+- Scikit-learn 1.6.1 (ML library)
+- Pandas 2.2.0+ (Data processing)
+- Flask-CORS 4.0.0 (CORS handling)
+- Gunicorn 21.2.0 (WSGI server)
+- Python-dotenv 1.0.0 (Environment variables)
+
+**Frontend:**
+- Vue.js 3 (Progressive framework)
+- Vite (Build tool)
+- Tailwind CSS (Utility-first CSS)
+- Axios (HTTP client)
+- Vue Router (Routing)
+
+**ML Model:**
+- Random Forest Classifier
+- Scikit-learn Pipeline
+- One-Hot Encoding
+- 300 estimators, max_depth=15
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+---
+
+## 👤 Author
+
+**widy4aa**
+- GitHub: [@widy4aa](https://github.com/widy4aa)
+- Repository: [ResignPrediction](https://github.com/widy4aa/ResignPrediction)
+
+---
+
+## 🙏 Acknowledgments
+
+- IBM HR Analytics Dataset
+- Scikit-learn Documentation
+- Vue.js Community
+- Flask Documentation
+
+---
+
+**⭐ If you find this project useful, please give it a star!**
 python --version  # Should be 3.8+
 
 # Verify dependencies

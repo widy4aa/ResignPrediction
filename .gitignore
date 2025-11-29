@@ -48,9 +48,10 @@ dist/
 Thumbs.db
 
 # Project specific
-*.pkl
-*.json
-*.csv
+# Note: Keep model files and results in git for deployment
+# *.pkl
+# *.json
+# *.csv
 
 # Docker
 .docker
