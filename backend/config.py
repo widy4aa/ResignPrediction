@@ -3,39 +3,42 @@ Configuration - App settings and paths
 """
 
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 class Config:
     """Application configuration"""
     
     # Flask settings
-    DEBUG = True
-    PORT = 5000
-    HOST = '127.0.0.1'
+    DEBUG = os.getenv('FLASK_DEBUG', 'true').lower() == 'true'
+    PORT = int(os.getenv('FLASK_PORT', 5000))
+    HOST = os.getenv('FLASK_HOST', '0.0.0.0')
     
     # CORS settings
-    CORS_ORIGINS = '*'
+    CORS_ORIGINS = os.getenv('CORS_ORIGINS', '*')
     
-    # Paths - handle both local and Docker environments
+    # Base directory
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     
-    # Try local path first (development), then Docker path
-    MODEL_DIR = os.path.join(BASE_DIR, '..', 'model')
-    if not os.path.exists(MODEL_DIR):
-        MODEL_DIR = '/model'
-    if not os.path.exists(MODEL_DIR):
-        MODEL_DIR = os.path.join(BASE_DIR, 'model')
+    # Paths from environment variables (with fallback to defaults)
+    MODEL_PATH = os.getenv('MODEL_PATH', os.path.join(BASE_DIR, '..', 'model', 'attrition_pipeline_minimal.pkl'))
+    RESULTS_PATH = os.getenv('RESULTS_PATH', os.path.join(BASE_DIR, '..', 'model', 'hasil.json'))
+    IMG_BASE_PATH = os.getenv('IMG_BASE_PATH', os.path.join(BASE_DIR, '..', 'model', 'img'))
     
-    # Model files
-    MODEL_PATH = os.path.join(MODEL_DIR, 'attrition_pipeline_minimal.pkl')
-    RESULTS_PATH = os.path.join(MODEL_DIR, 'hasil.json')
-    
-    # Visualization
-    IMG_BASE_PATH = os.path.join(MODEL_DIR, 'img')
+    # Convert relative paths to absolute paths
+    if not os.path.isabs(MODEL_PATH):
+        MODEL_PATH = os.path.join(BASE_DIR, MODEL_PATH)
+    if not os.path.isabs(RESULTS_PATH):
+        RESULTS_PATH = os.path.join(BASE_DIR, RESULTS_PATH)
+    if not os.path.isabs(IMG_BASE_PATH):
+        IMG_BASE_PATH = os.path.join(BASE_DIR, IMG_BASE_PATH)
     
     # Model info
-    MODEL_TYPE = 'ultra_minimal'
-    REQUIRED_FEATURES = 7
+    MODEL_TYPE = os.getenv('MODEL_TYPE', 'ultra_minimal')
+    REQUIRED_FEATURES = int(os.getenv('REQUIRED_FEATURES', 7))
     
     @classmethod
     def validate_paths(cls):
