@@ -234,7 +234,7 @@
             <div class="grid gap-4 md:grid-cols-2">
               <div>
                 <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('full', 'preprocessing_flow.png')">
-                  <img :src="`http://localhost:5000${getVisualization('full', 'preprocessing_flow.png')}`" alt="Full Preprocessing" class="w-full" />
+                  <img :src="`${API_URL}${getVisualization('full', 'preprocessing_flow.png')}`" alt="Full Preprocessing" class="w-full" />
                 </div>
                 <div class="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
                   <p class="text-xs text-blue-900"><strong>📊 Preprocessing Flow:</strong> Diagram alur data cleaning dan feature engineering. Menunjukkan transformasi dari 35 fitur raw → 31 fitur final setelah drop 4 fitur konstanta.</p>
@@ -347,7 +347,7 @@
             <div class="grid gap-4 md:grid-cols-2 mb-4">
               <div>
                 <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('full', 'confusion_matrix.png')">
-                  <img :src="`http://localhost:5000${getVisualization('full', 'confusion_matrix.png')}`" alt="Full Confusion Matrix" class="w-full" />
+                  <img :src="`${API_URL}${getVisualization('full', 'confusion_matrix.png')}`" alt="Full Confusion Matrix" class="w-full" />
                 </div>
                 <div class="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
                   <p class="text-xs text-blue-900"><strong>📈 Confusion Matrix:</strong> Matriks prediksi vs aktual. Diagonal utama (TN & TP) menunjukkan prediksi benar. Model ini prediksi 235 No Attrition benar, 10 Yes Attrition benar.</p>
@@ -355,7 +355,7 @@
               </div>
               <div>
                 <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('full', 'feature_importance.png')">
-                  <img :src="`http://localhost:5000${getVisualization('full', 'feature_importance.png')}`" alt="Full Feature Importance" class="w-full" />
+                  <img :src="`${API_URL}${getVisualization('full', 'feature_importance.png')}`" alt="Full Feature Importance" class="w-full" />
                 </div>
                 <div class="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
                   <p class="text-xs text-blue-900"><strong>🎯 Feature Importance:</strong> Kontribusi setiap fitur dalam model. MonthlyIncome, Age, dan TotalWorkingYears paling berpengaruh. Fitur dengan importance <3% kandidat untuk dihapus.</p>
@@ -401,7 +401,7 @@
             <div class="grid gap-4 md:grid-cols-2">
               <div>
                 <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('reduced', 'preprocessing_flow.png')">
-                  <img :src="`http://localhost:5000${getVisualization('reduced', 'preprocessing_flow.png')}`" alt="Reduced Preprocessing" class="w-full" />
+                  <img :src="`${API_URL}${getVisualization('reduced', 'preprocessing_flow.png')}`" alt="Reduced Preprocessing" class="w-full" />
                 </div>
                 <div class="mt-2 p-3 bg-purple-50 rounded-lg border border-purple-200">
                   <p class="text-xs text-purple-900"><strong>📊 Preprocessing Flow:</strong> Alur reduksi dari 31 → 11 fitur. Menghapus fitur dengan bias etis, redundansi, dan importance rendah. Fokus pada fitur paling prediktif & etis.</p>
@@ -563,7 +563,7 @@
             <div class="grid gap-4 md:grid-cols-2 mb-4">
               <div>
                 <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('reduced', 'confusion_matrix.png')">
-                  <img :src="`http://localhost:5000${getVisualization('reduced', 'confusion_matrix.png')}`" alt="Reduced Confusion Matrix" class="w-full" />
+                  <img :src="`${API_URL}${getVisualization('reduced', 'confusion_matrix.png')}`" alt="Reduced Confusion Matrix" class="w-full" />
                 </div>
                 <div class="mt-2 p-3 bg-purple-50 rounded-lg border border-purple-200">
                   <p class="text-xs text-purple-900"><strong>📈 Confusion Matrix:</strong> Performa sama dengan Full Model (83.33%) dengan 64.5% fitur lebih sedikit. Efisiensi tinggi tanpa loss akurasi - menunjukkan 20 fitur yang dihapus memang tidak penting.</p>
@@ -571,7 +571,7 @@
               </div>
               <div>
                 <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('reduced', 'feature_importance.png')">
-                  <img :src="`http://localhost:5000${getVisualization('reduced', 'feature_importance.png')}`" alt="Reduced Feature Importance" class="w-full" />
+                  <img :src="`${API_URL}${getVisualization('reduced', 'feature_importance.png')}`" alt="Reduced Feature Importance" class="w-full" />
                 </div>
                 <div class="mt-2 p-3 bg-purple-50 rounded-lg border border-purple-200">
                   <p class="text-xs text-purple-900"><strong>🎯 Feature Importance:</strong> Distribusi importance lebih merata di 11 fitur. MonthlyIncome masih dominan (18%), diikuti Age & TotalWorkingYears. Tidak ada fitur dengan importance <5%.</p>
@@ -617,7 +617,7 @@
             <div class="grid gap-4 md:grid-cols-2">
               <div>
                 <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('minimal', 'preprocessing_flow.png')">
-                  <img :src="`http://localhost:5000${getVisualization('minimal', 'preprocessing_flow.png')}`" alt="Minimal Preprocessing" class="w-full" />
+                  <img :src="`${API_URL}${getVisualization('minimal', 'preprocessing_flow.png')}`" alt="Minimal Preprocessing" class="w-full" />
                 </div>
                 <div class="mt-2 p-3 bg-green-50 rounded-lg border border-green-200">
                   <p class="text-xs text-green-900"><strong>📊 Preprocessing Flow:</strong> Ultra-minimal 11 → 7 fitur (77.4% reduction dari Full). Hanya fitur dengan importance ≥7% & UX-friendly. Optimasi performa + kemudahan input user.</p>
@@ -789,7 +789,7 @@
             <div class="grid gap-4 md:grid-cols-2 mb-4">
               <div>
                 <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('minimal', 'confusion_matrix.png')">
-                  <img :src="`http://localhost:5000${getVisualization('minimal', 'confusion_matrix.png')}`" alt="Minimal Confusion Matrix" class="w-full" />
+                  <img :src="`${API_URL}${getVisualization('minimal', 'confusion_matrix.png')}`" alt="Minimal Confusion Matrix" class="w-full" />
                 </div>
                 <div class="mt-2 p-3 bg-green-50 border-2 border-green-500 rounded-lg">
                   <p class="text-xs text-green-900"><strong>📈 Confusion Matrix (BEST):</strong> Akurasi NAIK jadi 84.01% dengan hanya 7 fitur! Prediksi lebih akurat: 237 TN, 12 TP. Model paling efisien & akurat - Sweet spot antara simplicity & performance.</p>
@@ -797,7 +797,7 @@
               </div>
               <div>
                 <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('minimal', 'feature_importance.png')">
-                  <img :src="`http://localhost:5000${getVisualization('minimal', 'feature_importance.png')}`" alt="Minimal Feature Importance" class="w-full" />
+                  <img :src="`${API_URL}${getVisualization('minimal', 'feature_importance.png')}`" alt="Minimal Feature Importance" class="w-full" />
                 </div>
                 <div class="mt-2 p-3 bg-green-50 border-2 border-green-500 rounded-lg">
                   <p class="text-xs text-green-900"><strong>🎯 Feature Importance (TOP 7):</strong> MonthlyIncome 23.65% (paling kuat), TotalWorkingYears 18.30%, Age 17.78%. Semua fitur berkontribusi signifikan ≥7% - tidak ada noise, pure signal!</p>
@@ -835,7 +835,7 @@
             <!-- Model Accuracy Comparison -->
             <div>
               <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('comparison', 'model_accuracy_comparison.png')">
-                <img :src="`http://localhost:5000${getVisualization('comparison', 'model_accuracy_comparison.png')}`" alt="Model Accuracy Comparison" class="w-full" />
+                <img :src="`${API_URL}${getVisualization('comparison', 'model_accuracy_comparison.png')}`" alt="Model Accuracy Comparison" class="w-full" />
               </div>
               <div class="mt-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
                 <p class="text-xs text-amber-900"><strong>Accuracy Comparison:</strong> Bar chart perbandingan akurasi Train vs Test ketiga model. Minimal (7 fitur) unggul 84.01%, Full dan Reduced sama 83.33%. Less is more!</p>
@@ -845,7 +845,7 @@
             <!-- Feature Efficiency -->
             <div>
               <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('comparison', 'feature_efficiency.png')">
-                <img :src="`http://localhost:5000${getVisualization('comparison', 'feature_efficiency.png')}`" alt="Feature Efficiency" class="w-full" />
+                <img :src="`${API_URL}${getVisualization('comparison', 'feature_efficiency.png')}`" alt="Feature Efficiency" class="w-full" />
               </div>
               <div class="mt-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
                 <p class="text-xs text-amber-900"><strong>Feature Efficiency:</strong> Scatter plot akurasi vs jumlah fitur. Minimal (7) di kanan atas = akurasi tertinggi dengan fitur paling sedikit. Pareto optimal point!</p>
@@ -874,7 +874,7 @@
             <!-- Metrics Overview -->
             <div>
               <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('comparison', 'metrics_overview.png')">
-                <img :src="`http://localhost:5000${getVisualization('comparison', 'metrics_overview.png')}`" alt="Metrics Overview" class="w-full" />
+                <img :src="`${API_URL}${getVisualization('comparison', 'metrics_overview.png')}`" alt="Metrics Overview" class="w-full" />
               </div>
               <div class="mt-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
                 <p class="text-xs text-amber-900"><strong>Metrics Overview:</strong> Heatmap Precision, Recall, F1-Score ketiga model. Minimal unggul di semua metrik untuk class Yes (12% recall vs 0-8%). Model paling balanced!</p>
@@ -884,7 +884,7 @@
             <!-- Training Time Comparison -->
             <div>
               <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('comparison', 'training_time_comparison.png')">
-                <img :src="`http://localhost:5000${getVisualization('comparison', 'training_time_comparison.png')}`" alt="Training Time" class="w-full" />
+                <img :src="`${API_URL}${getVisualization('comparison', 'training_time_comparison.png')}`" alt="Training Time" class="w-full" />
               </div>
               <div class="mt-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
                 <p class="text-xs text-amber-900"><strong>Training Time:</strong> Bar chart waktu training. Full: 0.117s, Reduced: 0.102s (-12.8%), Minimal: 0.096s (-17.9%). Lebih sedikit fitur = training lebih cepat = deploy lebih efisien.</p>
@@ -894,7 +894,7 @@
             <!-- Summary Dashboard -->
             <div>
               <div class="rounded-lg border overflow-hidden bg-white cursor-pointer hover:shadow-lg transition-shadow" @click="openVisualization('comparison', 'summary_dashboard.png')">
-                <img :src="`http://localhost:5000${getVisualization('comparison', 'summary_dashboard.png')}`" alt="Summary Dashboard" class="w-full" />
+                <img :src="`${API_URL}${getVisualization('comparison', 'summary_dashboard.png')}`" alt="Summary Dashboard" class="w-full" />
               </div>
               <div class="mt-2 p-3 bg-amber-50 border-2 border-amber-500 rounded-lg">
                 <p class="text-xs text-amber-900"><strong>Summary Dashboard:</strong> Comprehensive view 4 metrik utama (Accuracy, Precision, Recall, F1) semua model. Visualisasi lengkap untuk executive summary - satu pandang langsung tahu Minimal model pemenangnya!</p>
@@ -1080,6 +1080,7 @@ import axios from 'axios'
 import Button from '../components/ui/Button.vue'
 import Card from '../components/ui/Card.vue'
 import Badge from '../components/ui/Badge.vue'
+import { API_URL, API_ENDPOINTS } from '../config/api.js'
 
 const loading = ref(true)
 const error = ref(null)
@@ -1112,7 +1113,7 @@ const closeModal = () => {
 }
 
 const openVisualization = (category, filename) => {
-  const imageSrc = `http://localhost:5000/api/visualizations/${category}/${filename}`
+  const imageSrc = `${API_ENDPOINTS.visualizations}/${category}/${filename}`
   openModal(imageSrc)
 }
 
@@ -1123,13 +1124,13 @@ const loadData = async () => {
     
     console.log('Fetching results...')
     // Fetch results from API
-    const resultsResponse = await axios.get('http://localhost:5000/api/results')
+    const resultsResponse = await axios.get(API_ENDPOINTS.results)
     console.log('Results response:', resultsResponse.data)
     resultsData.value = resultsResponse.data
     
     console.log('Fetching visualizations...')
     // Fetch visualizations list
-    const vizResponse = await axios.get('http://localhost:5000/api/visualizations/list')
+    const vizResponse = await axios.get(API_ENDPOINTS.vizList)
     console.log('Visualizations response:', vizResponse.data)
     visualizations.value = vizResponse.data.visualizations
     

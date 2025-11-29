@@ -350,6 +350,7 @@ import axios from 'axios'
 import Button from '../components/ui/Button.vue'
 import Card from '../components/ui/Card.vue'
 import Badge from '../components/ui/Badge.vue'
+import { API_ENDPOINTS } from '../config/api'
 
 const mode = ref('manual')
 const fileInput = ref(null)
@@ -379,7 +380,7 @@ const predict = async () => {
   result.value = null
 
   try {
-    const response = await axios.post('http://localhost:5000/predict', formData.value)
+    const response = await axios.post(API_ENDPOINTS.predict, formData.value)
     result.value = response.data
   } catch (err) {
     error.value = err.response?.data?.error || 'Terjadi kesalahan saat prediksi'
@@ -479,7 +480,7 @@ const predictCSV = async () => {
     const results = []
     for (const row of data) {
       try {
-        const response = await axios.post('http://localhost:5000/predict', row)
+        const response = await axios.post(API_ENDPOINTS.predict, row)
         results.push({
           input: row,
           prediction: response.data.prediction,

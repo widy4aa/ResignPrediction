@@ -91,6 +91,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import Button from '../components/ui/Button.vue'
 import Card from '../components/ui/Card.vue'
+import { API_ENDPOINTS } from '../config/api.js'
 
 const featuresSection = ref(null)
 const stats = ref({
@@ -105,7 +106,7 @@ const scrollToFeatures = () => {
 
 const fetchStats = async () => {
   try {
-    const response = await axios.get('http://localhost:5000/api/results/summary')
+    const response = await axios.get(API_ENDPOINTS.summary)
     const data = response.data
     
     stats.value = {
